@@ -1,0 +1,497 @@
+{% extends 'books/base.html' %}
+{% block title %}{{ book.title }} — Library{% endblock %}
+{% block content %}
+  <div class="book-detail-header">
+    <div class="header-content">
+      <div class="title-section">
+        <div class="breadcrumb">
+          <a href="{% url 'books:list' %}" class="breadcrumb-link">Books</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">Details</span>
+        </div>
+        <h1 class="book-title">{{ book.title }}</h1>
+        <div class="book-meta">
+          <span class="author-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            {{ book.author }}
+          </span>
+          {% if book.published_date %}
+          <span class="year-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M3 10H21" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 3V6" stroke="currentColor" stroke-width="2"/>
+              <path d="M16 3V6" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            {{ book.published_date|date:"Y" }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="action-buttons">
+        <a href="{% url 'books:edit' book.pk %}" class="btn btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M18.5 2.5C18.8978 2.10217 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10217 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10217 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Edit Book
+        </a>
+        <a href="{% url 'books:delete' book.pk %}" class="btn btn-danger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 7L18.1327 19.1425C18.0579 20.1891 17.187 21 16.1378 21H7.86224C6.81296 21 5.94208 20.1891 5.86732 19.1425L5 7M10 11V17M14 11V17M15 7V4C15 3.44772 14.5523 3 14 3H10C9.44772 3 9 3.44772 9 4V7M4 7H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Delete
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="book-content">
+    <div class="book-layout">
+      {% if book.cover_url %}
+        <div class="book-cover-container">
+          <div class="book-cover">
+            <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="cover-image">
+            <div class="cover-overlay">
+              <button class="view-cover-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                View Cover
+              </button>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="book-details">
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Author</label>
+            <div class="detail-value">{{ book.author }}</div>
+          </div>
+          
+          <div class="detail-item">
+            <label>Published Date</label>
+            <div class="detail-value">
+              {% if book.published_date %}
+                <span class="date-display">{{ book.published_date }}</span>
+              {% else %}
+                <span class="muted">Not specified</span>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <label>Pages</label>
+            <div class="detail-value">
+              {% if book.pages %}
+                <span class="pages-count">{{ book.pages }} pages</span>
+              {% else %}
+                <span class="muted">Not specified</span>
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <label>ISBN</label>
+            <div class="detail-value">
+              {% if book.isbn %}
+                <code class="isbn-code">{{ book.isbn }}</code>
+              {% else %}
+                <span class="muted">Not available</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if book.summary %}
+          <div class="summary-section">
+            <h3 class="summary-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Summary
+            </h3>
+            <div class="summary-content">
+              <p>{{ book.summary|linebreaks }}</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="navigation-footer">
+      <a href="{% url 'books:list' %}" class="btn btn-ghost back-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to All Books
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .book-detail-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      padding: 0;
+      margin-bottom: 32px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 32px;
+      gap: 24px;
+    }
+    
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .breadcrumb-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    
+    .breadcrumb-link:hover {
+      color: white;
+      text-decoration: underline;
+    }
+    
+    .breadcrumb-separator {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .breadcrumb-current {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .book-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .book-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .author-badge, .year-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease-in-out;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-primary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: white;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .book-content {
+      padding: 0 8px;
+    }
+    
+    .book-layout {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+    }
+    
+    .book-cover-container {
+      flex: 0 0 280px;
+      position: sticky;
+      top: 20px;
+    }
+    
+    .book-cover {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .book-cover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+    }
+    
+    .cover-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .book-cover:hover .cover-image {
+      transform: scale(1.05);
+    }
+    
+    .cover-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .book-cover:hover .cover-overlay {
+      opacity: 1;
+    }
+    
+    .view-cover-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      color: #1e293b;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .view-cover-btn:hover {
+      background: #f1f5f9;
+      transform: translateY(-1px);
+    }
+    
+    .book-details {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    
+    .detail-item {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #f1f5f9;
+    }
+    
+    .detail-item label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    
+    .detail-value {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    
+    .date-display {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+    
+    .pages-count {
+      color: #10b981;
+      font-weight: 600;
+    }
+    
+    .isbn-code {
+      background: #1e293b;
+      color: #f1f5f9;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 14px;
+    }
+    
+    .summary-section {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    
+    .summary-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 20px 0;
+      color: #0f172a;
+    }
+    
+    .summary-content {
+      line-height: 1.7;
+      color: #475569;
+      font-size: 15px;
+    }
+    
+    .summary-content p {
+      margin: 0;
+    }
+    
+    .navigation-footer {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid #f1f5f9;
+      text-align: center;
+    }
+    
+    .back-btn {
+      background: white;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .back-btn:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      transform: translateY(-1px);
+    }
+    
+    .muted {
+      color: #94a3b8;
+      font-style: italic;
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+      }
+      
+      .action-buttons {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .book-layout {
+        flex-direction: column;
+        gap: 24px;
+      }
+      
+      .book-cover-container {
+        flex: none;
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+      }
+      
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .book-title {
+        font-size: 24px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header-content {
+        padding: 20px;
+      }
+      
+      .book-title {
+        font-size: 20px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</div>
+{% endblock %}
